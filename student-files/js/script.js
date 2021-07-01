@@ -1,30 +1,33 @@
 let peoplesArray = []
 let added = 0;
 
-function addToHTML(obj, y) {
-    added += 1;
-    let newCard = `
-    <div class="card" id="${added}">
-        <div class="card-img-container">
-            <img class="card-img" src="${obj.results[0].picture.large}" alt="profile picture">
-        </div>
-        <div class="card-info-container">
-            <h3 id="name" class="card-name cap">${obj.results[0].name.first+" "+obj.results[0].name.last}</h3>
-            <p class="card-text">${obj.results[0].email}</p>
-            <p class="card-text cap">${obj.results[0].location.city+", "+obj.results[0].location.state}</p>
-        </div>
-    </div>`
+function addToHTML() {
+    for(x = 0; x < peoplesArray.length; x++) {
+        let newCard = `
+        <div class="card" id="${x}">
+            <div class="card-img-container">
+                <img class="card-img" src="${peoplesArray[x].picture.large}" alt="profile picture">
+            </div>
+            <div class="card-info-container">
+                <h3 id="name" class="card-name cap">${peoplesArray[x].name.first+" "+peoplesArray[x].name.last}</h3>
+                <p class="card-text">${peoplesArray[x].email}</p>
+                <p class="card-text cap">${peoplesArray[x].location.city+", "+peoplesArray[x].location.state}</p>
+            </div>
+        </div>`
 
-    document.getElementById("gallery").innerHTML += newCard;
-    peoplesArray.push(obj.results[0])
+        document.getElementById("gallery").innerHTML += newCard;
+    }
 }
 
-for(x = 0; x < 12; x++) {
-    fetch('https://randomuser.me/api/')
-        .then(response => response.json())
-        .then(data => addToHTML(data, x))
-        .catch(error => console.error("Error - "+error))
-}
+
+fetch('https://randomuser.me/api/?results=12')
+    .then(response => response.json())
+    .then(data => {
+        peoplesArray = data.results
+        addToHTML()
+    })
+    .catch(error => console.error("Error - "+error))
+
 
 function getPlace(card) {
     let cardDiv = null
